@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Deploy Production
 
 # Controls when the workflow will run
 on:
@@ -35,6 +35,17 @@ jobs:
 
       - name: Install Depedencies
         run: npm install
+      
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2.1.4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Testing
+        run: npm run test
       
       - name: Build Site
         run: npm run generate --fail-on-error
